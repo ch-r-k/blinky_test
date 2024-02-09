@@ -1,0 +1,27 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+	"name": "ARM Cortex-M Development",
+	"dockerFile": "Dockerfile",
+	"customizations":
+	{
+		"vscode": 
+		{
+			"extensions": 
+			[
+				"ms-vscode.cpptools",
+				"mcu-debug.debug-tracker-vscode",
+				"marus25.cortex-debug",
+				"ms-vscode.cmake-tools",
+				"streetsidesoftware.code-spell-checker",
+				"eamodio.gitlens",
+        		"mhutchie.git-graph",
+        		"ms-vscode.hexeditor"
+			],
+			"settings": 
+			{
+				"dockerRunArgs": ["-m", "1024M"]
+			}
+		}
+	}
+}
