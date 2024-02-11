@@ -11,6 +11,7 @@
 			[
 				"ms-vscode.cpptools",
 				"mcu-debug.debug-tracker-vscode",
+				"mcu-debug.peripheral-viewer",
 				"marus25.cortex-debug",
 				"ms-vscode.cmake-tools",
 				"streetsidesoftware.code-spell-checker",

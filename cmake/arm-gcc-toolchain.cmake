@@ -7,7 +7,7 @@ elseif(UNIX OR APPLE)
     set(UTIL_SEARCH_CMD which)
 endif()
 
-set(TOOLCHAIN_DIR "/usr/bin")
+set(TOOLCHAIN_DIR "/opt/gcc-arm-none-eabi/bin")
 set(TOOLCHAIN_PREFIX "arm-none-eabi-")
 LIST(APPEND CMAKE_PREFIX_PATH "${TOOLCHAIN_DIR}")
 
