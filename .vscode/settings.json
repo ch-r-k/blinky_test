@@ -6,5 +6,15 @@
         "cstdarg": "cpp",
         "cstdint": "cpp",
         "new": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "Blinky",
+        "CMSIS",
+        "datasheet",
+        "JTAG",
+        "NUCLEO",
+        "NVIC",
+        "qpcpp",
+        "subscr"
+    ]
 }

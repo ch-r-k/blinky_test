@@ -1,4 +1,4 @@
-{
+  {
     // Use IntelliSense to learn about possible attributes.
     // Hover to view descriptions of existing attributes.
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -10,9 +10,9 @@
         "name": "J-Link",
         "cwd": "${workspaceRoot}",
         "armToolchainPath": "/opt/gcc-arm-none-eabi/bin/",
-        "executable": "${workspaceRoot}/build/blinky",
+        "executable": "$<TARGET_FILE:@PROJECT@>",
         "serverpath": "JLinkGDBServerCLExe",
-        "ipAddress": "172.16.254.106",
+        "ipAddress": "@JLINK_IP@",
         "runToEntryPoint": "main",
         "servertype": "jlink",
         "showDevDebugOutput": "both",

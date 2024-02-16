@@ -31,19 +31,21 @@ RUN apt-get update && \
     zlib1g-dev \
     libffi-dev \
     git \
-    cmake \
-    clang-format \
-    clang-tidy
+    cmake 
+ #   clang-format \
+ #   clang-tidy
 
 ## Python
-# download and install
+# download 
 RUN wget https://www.python.org/ftp/python/3.8.18/Python-3.8.18.tgz \
     && tar -xf Python-3.8.18.tgz \
     && rm Python-3.8.18.tgz
 
-# creat symbolic link
-RUN cd Python-3.8.18 \
+# install and creat symbolic link
+RUN cd /Python-3.8.18 \
     && ./configure --enable-optimizations --with-lto --enable-shared --prefix=/usr/local \
+    && make -j 4 \
+    && make altinstall \
     && ln -s /usr/local/lib/libpython3.8.so.1.0 /usr/lib/x86_64-linux-gnu
 
 ## ARM toolchain

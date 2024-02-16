@@ -125,10 +125,15 @@ if (FATAL_ERRORS)
 endif ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-volatile")
 
-#set(LAUNCH_FILE_INTERMEDIATE "${CMAKE_CURRENT_BINARY_DIR}/launch.json.in")
-#configure_file("${CMAKE_CURRENT_LIST_DIR}/cmake/launch.json.in" ${LAUNCH_FILE_INTERMEDIATE} @ONLY)
+set (JLINK_IP_FILE "${CMAKE_CURRENT_LIST_DIR}/cmake/jlink_ip.cmake")
+if (EXISTS "${JLINK_IP_FILE}")
+    include("${JLINK_IP_FILE}")
+endif ()
 
-#file(GENERATE
-#    OUTPUT "${CMAKE_CURRENT_LIST_DIR}/.vscode/launch.json"
-#    INPUT ${LAUNCH_FILE_INTERMEDIATE}
-#)
+set(LAUNCH_FILE_INTERMEDIATE "${CMAKE_CURRENT_BINARY_DIR}/launch.json.in")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/cmake/launch.json.in" ${LAUNCH_FILE_INTERMEDIATE} @ONLY)
+
+file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_LIST_DIR}/.vscode/launch.json"
+    INPUT ${LAUNCH_FILE_INTERMEDIATE}
+)
