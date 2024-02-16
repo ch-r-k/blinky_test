@@ -31,85 +31,90 @@
 // <www.state-machine.com/licensing>
 // <info@state-machine.com>
 //============================================================================
-#include "qpcpp.hpp"             // QP/C++ real-time embedded framework
-#include "blinky.hpp"            // Blinky Application interface
-#include "bsp.hpp"               // Board Support Package
+#include "qpcpp.hpp"   // QP/C++ real-time embedded framework
+#include "blinky.hpp"  // Blinky Application interface
+#include "bsp.hpp"     // Board Support Package
 
-#include "stm32l4xx.h"  // CMSIS-compliant header file for the MCU used
+#include "stm32l4xx.h"	// CMSIS-compliant header file for the MCU used
 // add other drivers if necessary...
 
 #ifdef Q_SPY
-    #error Simple Blinky Application does not provide Spy build configuration
+#error Simple Blinky Application does not provide Spy build configuration
 #endif
 
 //============================================================================
-namespace { // unnamed namespace for local stuff with internal linkage
+namespace
+{  // unnamed namespace for local stuff with internal linkage
 
 Q_DEFINE_THIS_FILE
 
 // Local-scope objects -------------------------------------------------------
-constexpr std::uint32_t LD4_PIN     {5U};
-constexpr std::uint32_t B1_PIN      {13U};
+constexpr std::uint32_t LD4_PIN{5U};
+constexpr std::uint32_t B1_PIN{13U};
 
-//Q_DEFINE_THIS_FILE
+// Q_DEFINE_THIS_FILE
 
-} // unnamed local namespace
+}  // namespace
 
 //============================================================================
 // Error handler and ISRs...
 
-extern "C" {
-
-Q_NORETURN Q_onError(char const * const module, int_t const id) {
-    // NOTE: this implementation of the assertion handler is intended only
-    // for debugging and MUST be changed for deployment of the application
-    // (assuming that you ship your production code with assertions enabled).
-    Q_UNUSED_PAR(module);
-    Q_UNUSED_PAR(id);
-    QS_ASSERTION(module, id, 10000U);
+extern "C"
+{
+    Q_NORETURN Q_onError(char const *const module, int_t const id)
+    {
+	// NOTE: this implementation of the assertion handler is intended only
+	// for debugging and MUST be changed for deployment of the application
+	// (assuming that you ship your production code with assertions
+	// enabled).
+	Q_UNUSED_PAR(module);
+	Q_UNUSED_PAR(id);
+	QS_ASSERTION(module, id, 10000U);
 
 #ifndef NDEBUG
-    // light up the user LED
-    GPIOA->BSRR = (1U << LD4_PIN);  // turn LED on
-    // for debugging, hang on in an endless loop...
-    for (;;) {
-    }
+	// light up the user LED
+	GPIOA->BSRR = (1U << LD4_PIN);	// turn LED on
+	// for debugging, hang on in an endless loop...
+	for (;;)
+	{
+	}
 #endif
 
-    NVIC_SystemReset();
-}
-//............................................................................
-void assert_failed(char const * const module, int_t const id); // prototype
-void assert_failed(char const * const module, int_t const id) {
-    Q_onError(module, id);
-}
+	NVIC_SystemReset();
+    }
+    //............................................................................
+    void assert_failed(char const *const module, int_t const id);  // prototype
+    void assert_failed(char const *const module, int_t const id)
+    {
+	Q_onError(module, id);
+    }
 
-// ISRs used in the application ==============================================
-void SysTick_Handler(void); // prototype
-void SysTick_Handler(void) {
+    // ISRs used in the application
+    // ==============================================
+    void SysTick_Handler(void);	 // prototype
+    void SysTick_Handler(void)
+    {
+	QP::QTimeEvt::TICK_X(0U, nullptr);  // process time events at rate 0
 
-    QP::QTimeEvt::TICK_X(0U, nullptr); // process time events at rate 0
+	QV_ARM_ERRATUM_838869();
+    }
 
-    QV_ARM_ERRATUM_838869();
-}
-
-} // extern "C"
-
+}  // extern "C"
 
 //============================================================================
-namespace BSP {
-
-void init() 
+namespace BSP
+{
+void init()
 {
     // Configure the MPU to prevent NULL-pointer dereferencing ...
-    MPU->RBAR = 0x0U                          // base address (NULL)
-                | MPU_RBAR_VALID_Msk          // valid region
-                | (MPU_RBAR_REGION_Msk & 7U); // region #7
-    MPU->RASR = (7U << MPU_RASR_SIZE_Pos)     // 2^(7+1) region
-                | (0x0U << MPU_RASR_AP_Pos)   // no-access region
-                | MPU_RASR_ENABLE_Msk;        // region enable
-    MPU->CTRL = MPU_CTRL_PRIVDEFENA_Msk       // enable background region
-                | MPU_CTRL_ENABLE_Msk;        // enable the MPU
+    MPU->RBAR = 0x0U			       // base address (NULL)
+		| MPU_RBAR_VALID_Msk	       // valid region
+		| (MPU_RBAR_REGION_Msk & 7U);  // region #7
+    MPU->RASR = (7U << MPU_RASR_SIZE_Pos)      // 2^(7+1) region
+		| (0x0U << MPU_RASR_AP_Pos)    // no-access region
+		| MPU_RASR_ENABLE_Msk;	       // region enable
+    MPU->CTRL = MPU_CTRL_PRIVDEFENA_Msk	       // enable background region
+		| MPU_CTRL_ENABLE_Msk;	       // enable the MPU
     __ISB();
     __DSB();
 
@@ -118,25 +123,26 @@ void init()
     SystemCoreClockUpdate();
 
     // enable GPIOA clock port for the LED LD4
-    //RCC->IOPENR |= (1U << 0U);
+    // RCC->IOPENR |= (1U << 0U);
 
     // set all used GPIOA pins as push-pull output, no pull-up, pull-down
-    GPIOA->MODER   &= ~(3U << 2U*LD4_PIN);
-    GPIOA->MODER   |=  (1U << 2U*LD4_PIN);
-    GPIOA->OTYPER  &= ~(1U <<    LD4_PIN);
-    GPIOA->OSPEEDR &= ~(3U << 2U*LD4_PIN);
-    GPIOA->OSPEEDR |=  (1U << 2U*LD4_PIN);
-    GPIOA->PUPDR   &= ~(3U << 2U*LD4_PIN);
+    GPIOA->MODER &= ~(3U << 2U * LD4_PIN);
+    GPIOA->MODER |= (1U << 2U * LD4_PIN);
+    GPIOA->OTYPER &= ~(1U << LD4_PIN);
+    GPIOA->OSPEEDR &= ~(3U << 2U * LD4_PIN);
+    GPIOA->OSPEEDR |= (1U << 2U * LD4_PIN);
+    GPIOA->PUPDR &= ~(3U << 2U * LD4_PIN);
 
     // enable GPIOC clock port for the Button B1
-    //RCC->IOPENR |=  (1U << 2U);
+    // RCC->IOPENR |=  (1U << 2U);
 
     // configure Button B1 pin on GPIOC as input, no pull-up, pull-down
-    GPIOC->MODER &= ~(3U << 2U*B1_PIN);
-    GPIOC->PUPDR &= ~(3U << 2U*B1_PIN);
+    GPIOC->MODER &= ~(3U << 2U * B1_PIN);
+    GPIOC->PUPDR &= ~(3U << 2U * B1_PIN);
 }
 //............................................................................
-void start() {
+void start()
+{
     // initialize event pools
     static QF_MPOOL_EL(QP::QEvt) smlPoolSto[20];
     QP::QF::poolInit(smlPoolSto, sizeof(smlPoolSto), sizeof(smlPoolSto[0]));
@@ -148,33 +154,33 @@ void start() {
     // instantiate and start AOs/threads...
 
     static QP::QEvt const *blinkyQueueSto[10];
-    APP::AO_Blinky->start(
-        1U,                         // QP prio. of the AO
-        blinkyQueueSto,              // event queue storage
-        Q_DIM(blinkyQueueSto),       // queue length [events]
-        nullptr, 0U,                 // no stack storage
-        nullptr);                    // no initialization param
+    APP::AO_Blinky->start(1U,			  // QP prio. of the AO
+			  blinkyQueueSto,	  // event queue storage
+			  Q_DIM(blinkyQueueSto),  // queue length [events]
+			  nullptr, 0U,		  // no stack storage
+			  nullptr);		  // no initialization param
 }
 //............................................................................
-void ledOn() {
+void ledOn()
+{
     GPIOA->BSRR = (1U << LD4_PIN);  // turn LED on
 }
 //............................................................................
-void ledOff() {
+void ledOff()
+{
     GPIOA->BSRR = (1U << (LD4_PIN + 16U));  // turn LED off
 }
 //............................................................................
-void terminate(int16_t result) {
-    Q_UNUSED_PAR(result);
-}
+void terminate(int16_t result) { Q_UNUSED_PAR(result); }
 
-} // namespace BSP
+}  // namespace BSP
 
 //============================================================================
-namespace QP {
-
+namespace QP
+{
 // QF callbacks...
-void QF::onStartup() {
+void QF::onStartup()
+{
     // set up the SysTick timer to fire at BSP::TICKS_PER_SEC rate
     SysTick_Config(SystemCoreClock / BSP::TICKS_PER_SEC);
 
@@ -183,20 +189,19 @@ void QF::onStartup() {
     NVIC_SetPriorityGrouping(0U);
 
     // set priorities of ALL ISRs used in the system, see NOTE1
-    NVIC_SetPriority(SysTick_IRQn,   QF_AWARE_ISR_CMSIS_PRI + 1U);
+    NVIC_SetPriority(SysTick_IRQn, QF_AWARE_ISR_CMSIS_PRI + 1U);
     // ...
 
     // enable IRQs...
 }
 //............................................................................
-void QF::onCleanup() {
-}
+void QF::onCleanup() {}
 //............................................................................
-void QV::onIdle() {
-
+void QV::onIdle()
+{
     // toggle an LED on and then off (not enough LEDs, see NOTE02)
-    //GPIOA->BSRR = (1U << LD4_PIN);         // turn LED[n] on
-    //GPIOA->BSRR = (1U << (LD4_PIN + 16U)); // turn LED[n] off
+    // GPIOA->BSRR = (1U << LD4_PIN);         // turn LED[n] on
+    // GPIOA->BSRR = (1U << (LD4_PIN + 16U)); // turn LED[n] off
 
 #ifdef NDEBUG
     // Put the CPU and peripherals to the low-power mode.
@@ -214,15 +219,14 @@ void QV::onIdle() {
     // The trick with BOOT(0) is it gets the part to run the System Loader
     // instead of your broken code. When done disconnect BOOT0, and start over.
     //
-    //QV_CPU_SLEEP(); // atomically go to sleep and enable interrupts
-    QF_INT_ENABLE(); // for now, just enable interrupts
+    // QV_CPU_SLEEP(); // atomically go to sleep and enable interrupts
+    QF_INT_ENABLE();  // for now, just enable interrupts
 #else
-    QF_INT_ENABLE(); // just enable interrupts
+    QF_INT_ENABLE();  // just enable interrupts
 #endif
 }
 
-
-} // namespace QP
+}  // namespace QP
 
 //============================================================================
 // NOTE0:

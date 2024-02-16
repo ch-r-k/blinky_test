@@ -17,7 +17,8 @@
 				"streetsidesoftware.code-spell-checker",
 				"eamodio.gitlens",
         		"mhutchie.git-graph",
-        		"ms-vscode.hexeditor"
+        		"ms-vscode.hexeditor",
+				"xaver.clang-format"
 			],
 			"settings": 
 			{

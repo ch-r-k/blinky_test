@@ -34,9 +34,9 @@
 #ifndef BSP_HPP_
 #define BSP_HPP_
 
-namespace BSP {
-
-constexpr std::uint32_t TICKS_PER_SEC {1000U};
+namespace BSP
+{
+constexpr std::uint32_t TICKS_PER_SEC{1000U};
 
 void init();
 void start();
@@ -44,7 +44,6 @@ void terminate(std::int16_t const result);
 void ledOn(void);
 void ledOff(void);
 
-} // namespace BSP
+}  // namespace BSP
 
-#endif // BSP_HPP_
-
+#endif	// BSP_HPP_

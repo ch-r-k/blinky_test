@@ -1,0 +1,10 @@
+{
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "clang-format.style": "file",
+    "editor.formatOnSave": false,
+    "files.associations": {
+        "cstdarg": "cpp",
+        "cstdint": "cpp",
+        "new": "cpp"
+    }
+}
