@@ -33,9 +33,9 @@ endif()
 set(INCLUDE_DIRS
     3d_party/qpcpp/include
     3d_party/qpcpp/ports/arm-cm/qv/gnu
-    board_specific
     3d_party/cmsis_device_stm_l4/Include
     3d_party/cmsis_5/CMSIS/Core/Include
+    3d_party/stm32l4xx_hal_driver/Inc
     src
     board_specific
 )
@@ -59,6 +59,9 @@ set(STM32_ASM_SRCS
 set(STM32_C_SRCS
     board_specific/system_stm32l4xx.c
     board_specific/stm32l4xx_it.c
+    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal.c
+    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal_cortex.c
+    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal_gpio.c
 )
 
 ## QPCPP source files
