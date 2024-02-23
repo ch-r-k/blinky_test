@@ -31,9 +31,9 @@ RUN apt-get update && \
     zlib1g-dev \
     libffi-dev \
     git \
-    cmake 
- #   clang-format \
- #   clang-tidy
+    cmake \
+    clang-format \
+    clang-tidy
 
 ## Python
 # download 

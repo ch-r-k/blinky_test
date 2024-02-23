@@ -38,15 +38,29 @@ set(INCLUDE_DIRS
     3d_party/stm32l4xx_hal_driver/Inc
     src
     board_specific
+    src/application
+    src/device
+    src/device/user_indication
+    src/hardware
+    src/hardware/output_pin
+    src/_common
 )
 
 
 ## Application source files
 # C++ source files
 set(APP_CPP_SRCS
-    src/bsp.cpp
+    src/system_manager.cpp
     src/main.cpp
-    src/blinky.cpp
+    src/_common/qpcpp_callbacks.cpp
+    src/_common/qpcpp_error.cpp
+    src/_common/io_functions.cpp
+    src/application/application_manager.cpp
+    src/application/blinky/blinky.cpp
+    src/device/device_manager.cpp
+    src/device/user_indication/user_indication.cpp
+    src/hardware/hardware_manager.cpp
+    src/hardware/output_pin/output_pin.cpp
 )
 
 ## STM32 source files

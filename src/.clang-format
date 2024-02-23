@@ -1,5 +1,6 @@
 BasedOnStyle: Google
 IndentWidth: 4
-UseTab: Always
+UseTab: Never
 SortIncludes: false
 BreakBeforeBraces: Allman
+ContinuationIndentWidth: 4
