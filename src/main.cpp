@@ -1,15 +1,15 @@
 //============================================================================
 // APP example
 //============================================================================
-#include "qpcpp.hpp"   // QP/C++ real-time embedded framework
-#include "blinky.hpp"  // DPP Application interface
-#include "bsp.hpp"     // Board Support Package
+#include "qpcpp.hpp"  // QP/C++ real-time embedded framework
+#include "system_manager.hpp"
 
 //............................................................................
 int main()
 {
-	QP::QF::init();			// initialize the framework
-	BSP::init();			// initialize the BSP
-	BSP::start();			// start the AOs/Threads
-	return QP::QF::run();	// run the QF application
+    SystemManager systemManager;
+    QP::QF::init();  // initialize the framework
+
+    systemManager.run();
+    return QP::QF::run();  // run the QF application
 }
