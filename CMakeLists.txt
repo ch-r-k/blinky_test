@@ -1,9 +1,9 @@
 ###########################################################################
 
 cmake_minimum_required (VERSION 3.17)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake")
 
-set(CMAKE_TOOLCHAIN_FILE ./cmake/arm-gcc-toolchain.cmake)
+set(CMAKE_TOOLCHAIN_FILE ./arm_setup/cmake/arm-gcc-toolchain.cmake)
 set(PROJECT blinky)
 
 include(device)
@@ -142,13 +142,13 @@ if (FATAL_ERRORS)
 endif ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-volatile")
 
-set (JLINK_IP_FILE "${CMAKE_CURRENT_LIST_DIR}/cmake/jlink_ip.cmake")
+set (JLINK_IP_FILE "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake/jlink_ip.cmake")
 if (EXISTS "${JLINK_IP_FILE}")
     include("${JLINK_IP_FILE}")
 endif ()
 
 set(LAUNCH_FILE_INTERMEDIATE "${CMAKE_CURRENT_BINARY_DIR}/launch.json.in")
-configure_file("${CMAKE_CURRENT_LIST_DIR}/cmake/launch.json.in" ${LAUNCH_FILE_INTERMEDIATE} @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake/launch.json.in" ${LAUNCH_FILE_INTERMEDIATE} @ONLY)
 
 file(GENERATE
     OUTPUT "${CMAKE_CURRENT_LIST_DIR}/.vscode/launch.json"
