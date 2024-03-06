@@ -60,8 +60,8 @@ ENV PATH=$PATH:/opt/gcc-arm-none-eabi/bin
 
 ## Jlink tools
 # download and install
-RUN wget --post-data 'accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software' https://www.segger.com/downloads/jlink/JLink_Linux_V794g_x86_64.deb \
-    && dpkg --unpack JLink_Linux_V794g_x86_64.deb \
+RUN wget --post-data 'accept_license_agreement=accepted&non_emb_ctr=confirmed&submit=Download+software' https://www.segger.com/downloads/jlink/JLink_Linux_x86_64.deb \
+    && dpkg --unpack JLink_Linux_x86_64.deb \
     && rm -f /var/lib/dpkg/info/jlink.postinst \
     && dpkg --configure jlink \
     && apt install -yf
