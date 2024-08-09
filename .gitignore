@@ -35,7 +35,7 @@
 build
 
 # setup
-arm_setup/cmake/jlink_ip.cmake
+jlink_ip.cmake
 
 .vscode
 .devcontainer

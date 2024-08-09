@@ -2,6 +2,7 @@
 
 cmake_minimum_required (VERSION 3.17)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake")
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/board_specific/stm32_l4")
 
 set(CMAKE_TOOLCHAIN_FILE ./arm_setup/cmake/arm-gcc-toolchain.cmake)
 set(PROJECT blinky)
@@ -28,7 +29,8 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel"
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
-#add_subdirectory(sdk EXCLUDE_FROM_ALL)
+add_subdirectory(3d_party EXCLUDE_FROM_ALL)
+add_subdirectory(board_specific)
 
 set(INCLUDE_DIRS
     3d_party/qpcpp/include
@@ -63,67 +65,20 @@ set(APP_CPP_SRCS
     src/hardware/output_pin/output_pin.cpp
 )
 
-## STM32 source files
-# Assembler source files
-set(STM32_ASM_SRCS
-    board_specific/startup_stm32l476xx.s
-)
-
-# C source files
-set(STM32_C_SRCS
-    board_specific/system_stm32l4xx.c
-    board_specific/stm32l4xx_it.c
-    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal.c
-    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal_cortex.c
-    3d_party/stm32l4xx_hal_driver/Src/stm32l4xx_hal_gpio.c
-)
-
-## QPCPP source files
-# C++ source files
-set(QP_CPP_SRCS
-    3d_party/qpcpp/src/qf/qep_hsm.cpp
-    3d_party/qpcpp/src/qf/qep_msm.cpp
-    3d_party/qpcpp/src/qf/qf_act.cpp
-    3d_party/qpcpp/src/qf/qf_actq.cpp
-    3d_party/qpcpp/src/qf/qf_defer.cpp
-    3d_party/qpcpp/src/qf/qf_dyn.cpp
-    3d_party/qpcpp/src/qf/qf_mem.cpp
-    3d_party/qpcpp/src/qf/qf_ps.cpp
-    3d_party/qpcpp/src/qf/qf_qact.cpp
-    3d_party/qpcpp/src/qf/qf_qeq.cpp
-    3d_party/qpcpp/src/qf/qf_qmact.cpp
-    3d_party/qpcpp/src/qf/qf_time.cpp
-    3d_party/qpcpp/src/qv/qv.cpp
-    3d_party/qpcpp/ports/arm-cm/qv/gnu/qv_port.cpp)
-
 include_directories(${INCLUDE_DIRS})
 
 add_executable( ${PROJECT} 
-                ${APP_CPP_SRCS}
-                ${STM32_ASM_SRCS} 
-                ${STM32_C_SRCS} 
-                ${QP_CPP_SRCS})
+                ${APP_CPP_SRCS})
 
 
 target_include_directories(${PROJECT} PRIVATE include)
 
 
-#target_link_libraries(${PROJECT} PRIVATE rsl10_system)
-#target_link_libraries(${PROJECT} PRIVATE ble_abstraction_layer)
+target_link_libraries(${PROJECT} PRIVATE stm32)
+target_link_libraries(${PROJECT} PRIVATE qpcpp)
 #target_link_libraries(${PROJECT} PRIVATE qpcpp_system)
 
-if (ENABLE_FOTA)
-    target_make_fota(${PROJECT})
-else ()
-    target_linker_script(${PROJECT} "${CMAKE_CURRENT_LIST_DIR}/board_specific/blinky.ld")
-endif ()
-
-#if (ENABLE_RTT)
-#    target_link_libraries(${PROJECT} PRIVATE SeggerRTT)
-#    target_compile_definitions(${PROJECT} PRIVATE ENABLE_RTT)
-#endif ()
-
-#target_compile_definitions(${PROJECT} PRIVATE Q_SPY)
+target_linker_script(${PROJECT} "${CMAKE_CURRENT_LIST_DIR}/board_specific/stm32_l4/blinky.ld")
 
 set(WARNINGS
     all
@@ -142,7 +97,7 @@ if (FATAL_ERRORS)
 endif ()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-volatile")
 
-set (JLINK_IP_FILE "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake/jlink_ip.cmake")
+set (JLINK_IP_FILE "${CMAKE_CURRENT_LIST_DIR}/jlink_ip.cmake")
 if (EXISTS "${JLINK_IP_FILE}")
     include("${JLINK_IP_FILE}")
 endif ()
