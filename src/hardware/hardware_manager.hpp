@@ -1,6 +1,7 @@
 #ifndef HARDWARE_MANAGER_HPP
 #define HARDWARE_MANAGER_HPP
 
+#include "output_pin/i_output_pin.hpp"
 #include "output_pin/output_pin.hpp"
 
 class HardwareManager
@@ -11,9 +12,9 @@ class HardwareManager
 
    public:
     HardwareManager();
-    ~HardwareManager();
+    ~HardwareManager() = default;
     void run();
-    OutputPin& getLedPin();
+    IOutputPin& getLedPin();
 };
 
 #endif  // HARDWARE_MANAGER_HPP

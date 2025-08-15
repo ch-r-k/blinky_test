@@ -37,5 +37,5 @@ build
 # setup
 jlink_ip.cmake
 
-.vscode
-.devcontainer
+#
+.cache

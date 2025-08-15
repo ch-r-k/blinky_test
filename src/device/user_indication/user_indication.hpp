@@ -2,7 +2,7 @@
 #define USER_INDICATION_HPP
 
 #include "i_user_indication.hpp"
-#include "i_output_pin.hpp"
+#include "hardware/output_pin/i_output_pin.hpp"
 
 class UserIndication : public IUserIndication
 {

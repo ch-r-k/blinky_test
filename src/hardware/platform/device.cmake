@@ -4,6 +4,9 @@ set(ARCH_FLAGS
 )
 
 set(FEATURE_FLAGS
+    -ffunction-sections
+    -fdata-sections
+    -fno-exceptions
 )
 
 set(DEVICE_DEFINES

@@ -3,7 +3,7 @@
 
 #include "qpcpp.hpp"
 #include "blinky/blinky.hpp"
-#include "device_manager.hpp"
+#include "device/device_manager.hpp"
 
 class ApplicationManager
 {

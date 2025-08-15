@@ -5,7 +5,8 @@
 #ifndef BLINKY_HPP_
 #define BLINKY_HPP_
 
-#include "i_user_indication.hpp"
+#include "device/user_indication/i_user_indication.hpp"
+#include "qpcpp.hpp"
 
 namespace APP
 {

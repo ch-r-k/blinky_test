@@ -5,6 +5,7 @@ set(INCLUDE_DIRS_STM
     cmsis_device_stm_l4/Include
     cmsis_5/CMSIS/Core/Include
     stm32l4xx_hal_driver/Inc
+    stm32_config
 )
 
 set(SOURCE_STM

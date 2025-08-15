@@ -32,6 +32,4 @@ HardwareManager::HardwareManager()
                      OutputPin::Speed::LOW);
 }
 
-HardwareManager::~HardwareManager() {}
-
-OutputPin& HardwareManager::getLedPin() { return ledPin; }
+IOutputPin& HardwareManager::getLedPin() { return ledPin; }

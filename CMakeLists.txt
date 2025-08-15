@@ -1,10 +1,29 @@
 ###########################################################################
 
 cmake_minimum_required (VERSION 3.17)
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake")
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/board_specific/stm32_l4")
 
-set(CMAKE_TOOLCHAIN_FILE ./arm_setup/cmake/arm-gcc-toolchain.cmake)
+set(TOOLCHAIN ARM_GCC)
+set(TARGET_DEVICE STM32L4)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/arm_setup/cmake")
+
+if("${TARGET_DEVICE}" STREQUAL "X86")
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/src/hardware_x86/platform")
+elseif("${TARGET_DEVICE}" STREQUAL "STM32L4")
+    list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/src/hardware/platform")
+else()
+    message(FATAL_ERROR "unsupported target: ${TARGET_DEVICE}")
+endif()
+
+if("${TOOLCHAIN}" STREQUAL "X86_GCC")
+    set(CMAKE_TOOLCHAIN_FILE ./arm_setup/cmake/x86-gcc-toolchain.cmake)  # ← use specific file!
+elseif("${TOOLCHAIN}" STREQUAL "ARM_GCC")
+    set(CMAKE_TOOLCHAIN_FILE ./arm_setup/cmake/arm-gcc-toolchain.cmake)
+else()
+    message(FATAL_ERROR "unsupported toolchain: ${TOOLCHAIN}")
+endif()
+
+
 set(PROJECT blinky)
 
 include(device)
@@ -16,10 +35,8 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(${PROJECT} LANGUAGES C CXX ASM)
 
-option(ENABLE_FOTA "Enable firmware update over the air" OFF)
-option(ENABLE_RTT "Enable SEGGER RTT for debugging" OFF)
+project(${PROJECT} LANGUAGES C CXX ASM)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug CACHE STRING "")
@@ -29,8 +46,10 @@ if(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel"
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 endif()
 
+
 add_subdirectory(3d_party EXCLUDE_FROM_ALL)
-add_subdirectory(board_specific)
+add_subdirectory(src/hardware/platform PUBLIC)
+
 
 set(INCLUDE_DIRS
     3d_party/qpcpp/include
@@ -39,13 +58,7 @@ set(INCLUDE_DIRS
     3d_party/cmsis_5/CMSIS/Core/Include
     3d_party/stm32l4xx_hal_driver/Inc
     src
-    board_specific
-    src/application
-    src/device
-    src/device/user_indication
-    src/hardware
-    src/hardware/output_pin
-    src/_common
+_   src/_common
 )
 
 
@@ -69,24 +82,30 @@ include_directories(${INCLUDE_DIRS})
 
 add_executable( ${PROJECT} 
                 ${APP_CPP_SRCS})
+# set linker options
+if("${TARGET_DEVICE}" STREQUAL "X86")
+   # do nothing
+elseif("${TARGET_DEVICE}" STREQUAL "STM32L4")    
+    target_linker_script(${PROJECT} 
+        "${CMAKE_CURRENT_LIST_DIR}/src/hardware/platform/linker.ld"
+    )
 
+else()
+    message(FATAL_ERROR "unsupported target: ${TARGET_DEVICE}")
+endif()
 
 target_include_directories(${PROJECT} PRIVATE include)
 
-
 target_link_libraries(${PROJECT} PRIVATE stm32)
 target_link_libraries(${PROJECT} PRIVATE qpcpp)
-#target_link_libraries(${PROJECT} PRIVATE qpcpp_system)
-
-target_linker_script(${PROJECT} "${CMAKE_CURRENT_LIST_DIR}/board_specific/stm32_l4/blinky.ld")
 
 set(WARNINGS
     all
-	extra
-	maybe-uninitialized
-	strict-overflow=2
-	switch
-	write-strings
+    extra
+    maybe-uninitialized
+    strict-overflow=2
+    switch
+    write-strings
 )
 
 list(TRANSFORM WARNINGS PREPEND "-W")
