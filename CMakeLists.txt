@@ -67,8 +67,6 @@ _   src/_common
 set(APP_CPP_SRCS
     src/system_manager.cpp
     src/main.cpp
-    src/_common/qpcpp_callbacks.cpp
-    src/_common/qpcpp_error.cpp
     src/_common/io_functions.cpp
     src/application/application_manager.cpp
     src/application/blinky/blinky.cpp
@@ -76,6 +74,7 @@ set(APP_CPP_SRCS
     src/device/user_indication/user_indication.cpp
     src/hardware/hardware_manager.cpp
     src/hardware/output_pin/output_pin.cpp
+    src/hardware/driver/uart/uart.cpp
 )
 
 include_directories(${INCLUDE_DIRS})

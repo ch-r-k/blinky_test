@@ -9,7 +9,6 @@
 //!
 #include "qpcpp.hpp"
 #include "blinky.hpp"
-#include "qpcpp_callbacks.hpp"
 #include "qpcpp_signals.hpp"
 
 namespace application_layer
@@ -26,7 +25,7 @@ Q_STATE_DEF(Blinky, initial)
     (void)e;  // unused parameter
 
     // arm the time event to expire in half a second and every half second
-    m_timeEvt.armX(TICKS_PER_SEC / 2U, TICKS_PER_SEC / 2U);
+    m_timeEvt.armX(1000U / 2U, 1000U / 2U);
     return tran(&off);
 }
 //............................................................................
