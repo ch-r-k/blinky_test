@@ -10,9 +10,11 @@ class UserIndication : public IUserIndication
     IOutputPin* outputPin = nullptr;
 
    public:
+    UserIndication() = default;
+    ~UserIndication() = default;
     void set() override;
     void reset() override;
-    void setOutputPin(IOutputPin& initOutputPin);
+    void setOutputPin(IOutputPin& init_output_pin);
 };
 
 #endif  // USER_INDICATION_HPP

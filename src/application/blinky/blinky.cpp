@@ -10,15 +10,9 @@
 #include "qpcpp.hpp"
 #include "blinky.hpp"
 #include "qpcpp_callbacks.hpp"
+#include "qpcpp_signals.hpp"
 
-// unnamed namespace for local definitions with internal linkage
-namespace
-{
-// Q_DEFINE_THIS_FILE
-
-}  // unnamed namespace
-
-namespace APP
+namespace application_layer
 {
 //............................................................................
 Blinky::Blinky() : QP::QActive(&initial), m_timeEvt(this, TIMEOUT_SIG, 0U)
@@ -86,9 +80,9 @@ Q_STATE_DEF(Blinky, on)
     return status;
 }
 //............................................................................
-void Blinky::setUserIndication(IUserIndication& initUserIndication)
+void Blinky::setUserIndication(IUserIndication& init_user_indication)
 {
-    userIndication = &initUserIndication;
+    userIndication = &init_user_indication;
 }
 
-}  // namespace APP
+}  // namespace application_layer

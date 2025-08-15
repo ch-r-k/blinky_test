@@ -1,5 +1,4 @@
-#ifndef SYSTEM_MANAGER_HPP
-#define SYSTEM_MANAGER_HPP
+#pragma once
 
 #include "application/application_manager.hpp"
 #include "device/device_manager.hpp"
@@ -17,5 +16,3 @@ class SystemManager
     ~SystemManager();
     void run();
 };
-
-#endif  // SYSTEM_MANAGER_HPP

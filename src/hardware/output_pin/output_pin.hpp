@@ -1,5 +1,4 @@
-#ifndef OUTPUT_PIN_HPP
-#define OUTPUT_PIN_HPP
+#pragma once
 
 #include <cstdint>
 
@@ -73,11 +72,9 @@ class OutputPin : public IOutputPin
    public:
     OutputPin();
     ~OutputPin();
-    void configure(Port initPort, Pin initPin, Mode initMode, Pull initPull,
-                   Speed initSpeed);
+    void configure(Port init_port, Pin init_pin, Mode init_mode, Pull init_pull,
+                   Speed init_speed);
     void set() override;
     void reset() override;
     GPIO_TypeDef* getPort(Port port);
 };
-
-#endif  // OUTPUT_PIN_HPP

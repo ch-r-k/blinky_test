@@ -1,5 +1,4 @@
-#ifndef DEVICE_MANAGER_HPP
-#define DEVICE_MANAGER_HPP
+#pragma once
 
 #include "hardware/hardware_manager.hpp"
 #include "user_indication/user_indication.hpp"
@@ -10,9 +9,7 @@ class DeviceManager
     UserIndication userIndication;
 
    public:
-    DeviceManager(HardwareManager& hardwareManager);
-    ~DeviceManager();
+    DeviceManager(HardwareManager& hardware_manager);
+    ~DeviceManager() = default;
     UserIndication& getUserIndication();
 };
-
-#endif  // DEVICE_MANAGER_HPP

@@ -8,24 +8,24 @@ OutputPin::~OutputPin()
     HAL_GPIO_DeInit(getPort(port), static_cast<uint8_t>(pin));
 }
 
-void OutputPin::configure(Port initPort, Pin initPin, Mode initMode,
-                          Pull initPull, Speed initSpeed)
+void OutputPin::configure(Port init_port, Pin init_pin, Mode init_mode,
+                          Pull init_pull, Speed init_speed)
 {
-    port = initPort;
-    pin = initPin;
-    mode = initMode;
-    pull = initPull;
-    speed = initSpeed;
+    port = init_port;
+    pin = init_pin;
+    mode = init_mode;
+    pull = init_pull;
+    speed = init_speed;
 
-    GPIO_InitTypeDef gpioInitStruct;
+    GPIO_InitTypeDef gpio_init_struct;
 
-    gpioInitStruct.Pin = static_cast<uint16_t>(pin);
-    gpioInitStruct.Mode = static_cast<uint8_t>(mode);
-    gpioInitStruct.Pull = static_cast<uint8_t>(pull);
-    gpioInitStruct.Speed = static_cast<uint8_t>(speed);
+    gpio_init_struct.Pin = static_cast<uint16_t>(pin);
+    gpio_init_struct.Mode = static_cast<uint8_t>(mode);
+    gpio_init_struct.Pull = static_cast<uint8_t>(pull);
+    gpio_init_struct.Speed = static_cast<uint8_t>(speed);
 
     HAL_GPIO_WritePin(getPort(port), static_cast<uint8_t>(pin), GPIO_PIN_SET);
-    HAL_GPIO_Init(getPort(port), &gpioInitStruct);
+    HAL_GPIO_Init(getPort(port), &gpio_init_struct);
 }
 
 void OutputPin::set()

@@ -1,10 +1,8 @@
 #include "device_manager.hpp"
 
-DeviceManager::DeviceManager(HardwareManager& hardwareManager)
+DeviceManager::DeviceManager(HardwareManager& hardware_manager)
 {
-    userIndication.setOutputPin(hardwareManager.getLedPin());
+    userIndication.setOutputPin(hardware_manager.getLedPin());
 }
-
-DeviceManager::~DeviceManager() {}
 
 UserIndication& DeviceManager::getUserIndication() { return userIndication; }

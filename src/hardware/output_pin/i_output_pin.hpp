@@ -1,5 +1,4 @@
-#ifndef I_OUTPUT_PIN_HPP
-#define I_OUTPUT_PIN_HPP
+#pragma once
 
 class IOutputPin
 {
@@ -7,5 +6,3 @@ class IOutputPin
     virtual void set() = 0;
     virtual void reset() = 0;
 };
-
-#endif  // I_OUTPUT_PIN_HPP

@@ -8,11 +8,11 @@
 class ApplicationManager
 {
    private:
-    APP::Blinky aoBlinky;
+    application_layer::Blinky aoBlinky;
 
    public:
-    ApplicationManager(DeviceManager& deviceManager);
-    ~ApplicationManager();
+    ApplicationManager(DeviceManager& device_manager);
+    ~ApplicationManager() = default;
 
     void start();
 };
