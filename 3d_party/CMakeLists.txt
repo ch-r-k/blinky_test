@@ -44,13 +44,13 @@ set(QP_CPP_SRCS
     qpcpp/src/qf/qf_time.cpp
     qpcpp/src/qv/qv.cpp
     qpcpp/ports/arm-cm/qv/gnu/qv_port.cpp
-    qpcpp/src/qs/qutest.cpp
-    qpcpp/src/qs/qstamp.cpp
-    qpcpp/src/qs/qs.cpp
-    qpcpp/src/qs/qs_rx.cpp
-    qpcpp/src/qs/qs_fp.cpp
-    qpcpp/src/qs/qs_64bit.cpp)
+    qpcpp/src/qs/qutest.cpp #qspy
+    qpcpp/src/qs/qstamp.cpp #qspy
+    qpcpp/src/qs/qs.cpp #qspy
+    qpcpp/src/qs/qs_rx.cpp #qspy
+    qpcpp/src/qs/qs_fp.cpp #qspy
+    qpcpp/src/qs/qs_64bit.cpp) #qspy
 
-target_compile_definitions(qpcpp PUBLIC Q_SPY)
+target_compile_definitions(qpcpp PUBLIC Q_SPY) #qspy
 target_include_directories(qpcpp PUBLIC ${INCLUDE_DIRS_QPCPP})
 target_sources(qpcpp PRIVATE ${QP_CPP_SRCS})

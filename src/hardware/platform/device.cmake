@@ -13,6 +13,10 @@ set(DEVICE_DEFINES
     STM32L476xx
 )
 
+set(DEVICE
+    STM32L476RG
+)
+
 add_compile_definitions(${DEVICE_DEFINES})
 
 set(ASM_FLAGS_LIST "${ARCH_FLAGS}")

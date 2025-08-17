@@ -152,7 +152,7 @@ void Uart::startWrite(const std::span<std::uint8_t> data)
     assert(is_open && "UART must be opened before writing");
 
     HAL_StatusTypeDef status =
-        HAL_UART_Transmit(&handler, data.data(), data.size(), 100);
+        HAL_UART_Transmit(&handler, data.data(), data.size(), 1);
 
     assert(status == HAL_OK && "UART Write failed");
 }
@@ -162,7 +162,7 @@ void Uart::startRead(const std::span<std::uint8_t> data)
     assert(is_open && "UART must be opened before reading");
 
     HAL_StatusTypeDef status =
-        HAL_UART_Receive(&handler, data.data(), data.size(), 100);
+        HAL_UART_Receive(&handler, data.data(), data.size(), 1);
 
     assert(status == HAL_OK && "UART Read failed");
 }

@@ -16,6 +16,19 @@ constexpr std::uint32_t TICKS_PER_SEC{1000U};
 int main()
 {
     static SystemManager system_manager;
+
+    // Uart for QSPY
+    qs_uart.configureBaudrate(115200);
+    qs_uart.configure(hardware_layer::Uart::WordLength::Length_8);
+    qs_uart.configure(hardware_layer::Uart::StopBits::Bit_1_0);
+    qs_uart.configure(hardware_layer::Uart::Parity::None);
+    qs_uart.configure(hardware_layer::Uart::HardwareControl::None);
+    qs_uart.configure(hardware_layer::Uart::Mode::TxRx);
+    qs_uart.configure(hardware_layer::Uart::OneBitSample::Disable);
+    qs_uart.configure(hardware_layer::Uart::Oversampling::Oversampling16);
+
+    qs_uart.open();
+
     QP::QF::init();  // initialize the framework
 
     system_manager.run();
@@ -29,10 +42,11 @@ void onStartup()
     NVIC_SetPriorityGrouping(0U);
 
     // set up the SysTick timer to fire at BSP_TICKS_PER_SEC rate
-    SysTick_Config(SystemCoreClock / 1);
+    SysTick_Config(SystemCoreClock / 1000U);
 
     QS_GLB_FILTER(QP::QS_SM_RECORDS);
     QS_GLB_FILTER(QP::QS_SC_RECORDS);
+    QS_GLB_FILTER(QP::QS_AO_RECORDS);
 }
 
 void onCleanup() {}

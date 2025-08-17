@@ -25,7 +25,7 @@ Q_STATE_DEF(Blinky, initial)
     (void)e;  // unused parameter
 
     // arm the time event to expire in half a second and every half second
-    m_timeEvt.armX(1000U / 2U, 1000U / 2U);
+    m_timeEvt.armX(1000, 500);
     return tran(&off);
 }
 //............................................................................
