@@ -3,7 +3,9 @@
 
 ApplicationManager::ApplicationManager(DeviceManager& device_manager)
 {
-    aoBlinky.setUserIndication(device_manager.getUserIndication());
+    ao_blinky.setUserIndication(device_manager.getUserIndication());
+    input_checker.setUserInput(device_manager.getUserInput());
+    input_checker.setReceiver(ao_blinky);
 }
 
 void ApplicationManager::start()
@@ -19,9 +21,18 @@ void ApplicationManager::start()
 
     // instantiate and start AOs/threads...
     static QP::QEvt const* blinky_queue_sto[10];
-    aoBlinky.start(1U,                       // QP prio. of the AO
-                   blinky_queue_sto,         // event queue storage
-                   Q_DIM(blinky_queue_sto),  // queue length [events]
-                   nullptr, 0U,              // no stack storage
-                   nullptr);                 // no initialization param
+    ao_blinky.start(1U,                       // QP prio. of the AO
+                    blinky_queue_sto,         // event queue storage
+                    Q_DIM(blinky_queue_sto),  // queue length [events]
+                    nullptr, 0U,              // no stack storage
+                    nullptr);                 // no initialization param
+
+    // instantiate and start AOs/threads...
+    static QP::QEvt const* input_checker_queue_sto[10];
+    input_checker.start(
+        2U,                              // QP prio. of the AO
+        input_checker_queue_sto,         // event queue storage
+        Q_DIM(input_checker_queue_sto),  // queue length [events]
+        nullptr, 0U,                     // no stack storage
+        nullptr);                        // no initialization param
 }

@@ -2,11 +2,11 @@
 
 #include <cstdint>
 
-#include "i_output_pin.hpp"
+#include "i_gpio_pin.hpp"
 #include "stm32l4xx.h"
 #include "stm32l4xx_hal.h"
 
-class OutputPin : public IOutputPin
+class GpioPin : public IGpioPin
 {
    public:
     enum class Port : uint8_t
@@ -43,6 +43,7 @@ class OutputPin : public IOutputPin
 
     enum class Mode : uint8_t
     {
+        INPUT = GPIO_MODE_INPUT,
         PUSH_PULL = GPIO_MODE_OUTPUT_PP,
         OPEN_DRAIN = GPIO_MODE_OUTPUT_OD
     };
@@ -70,11 +71,15 @@ class OutputPin : public IOutputPin
     Speed speed;
 
    public:
-    OutputPin();
-    ~OutputPin();
+    GpioPin(Port init_port, Pin init_pin, Mode init_mode, Pull init_pull,
+            Speed init_speed);
+    ~GpioPin() = default;
     void configure(Port init_port, Pin init_pin, Mode init_mode, Pull init_pull,
                    Speed init_speed);
+
+    void configure();
     void set() override;
     void reset() override;
+    bool get() override;
     GPIO_TypeDef* getPort(Port port);
 };

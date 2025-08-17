@@ -70,10 +70,12 @@ set(APP_CPP_SRCS
     src/_common/io_functions.cpp
     src/application/application_manager.cpp
     src/application/blinky/blinky.cpp
+    src/application/input_checker/input_checker.cpp
     src/device/device_manager.cpp
     src/device/user_indication/user_indication.cpp
+    src/device/user_input/user_input.cpp
     src/hardware/hardware_manager.cpp
-    src/hardware/output_pin/output_pin.cpp
+    src/hardware/driver/output_pin/gpio_pin.cpp
     src/hardware/driver/uart/uart.cpp
 )
 

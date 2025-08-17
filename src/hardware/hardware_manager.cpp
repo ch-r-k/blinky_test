@@ -1,5 +1,6 @@
 #include "hardware_manager.hpp"
 
+#include "hardware/driver/output_pin/gpio_pin.hpp"
 #include "stm32l4xx.h"  // CMSIS-compliant header file for the MCU used
 #include "stm32l4xx_hal.h"
 
@@ -26,10 +27,11 @@ HardwareManager::HardwareManager()
 
     // GPIO Ports Clock Enable
     __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
 
-    ledPin.configure(OutputPin::Port::PORT_A, OutputPin::Pin::PIN_5,
-                     OutputPin::Mode::PUSH_PULL, OutputPin::Pull::NOPULL,
-                     OutputPin::Speed::LOW);
+    led_pin.configure();
+    button_pin.configure();
 }
 
-IOutputPin& HardwareManager::getLedPin() { return ledPin; }
+IGpioPin& HardwareManager::getLedPin() { return led_pin; }
+IGpioPin& HardwareManager::getButtonPin() { return button_pin; }

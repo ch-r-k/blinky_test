@@ -7,30 +7,31 @@
 //! @file
 //! @brief Blinky example
 //!
+
 #include "qpcpp.hpp"
-#include "blinky.hpp"
+#include "input_checker.hpp"
 #include "qpcpp_signals.hpp"
 
 namespace application_layer
 {
 //............................................................................
-Blinky::Blinky()
-    : QP::QActive(&initial), m_timeEvt(this, TIMEOUT_BLINKY_SIG, 0U)
+InputChecker::InputChecker()
+    : QP::QActive(&initial), m_timeEvt(this, TIMEOUT_BUTTON_PRESS_SIG, 0U)
 {
     // empty
 }
 
 // HSM definition ------------------------------------------------------------
-Q_STATE_DEF(Blinky, initial)
+Q_STATE_DEF(InputChecker, initial)
 {
     (void)e;  // unused parameter
 
-    m_timeEvt.armX(1000, 500);
-    userIndication->reset();
-    return tran(&off);
+    // arm the time event to expire in half a second and every half second
+    m_timeEvt.armX(1000, 200);
+    return tran(&button_released);
 }
 //............................................................................
-Q_STATE_DEF(Blinky, idle)
+Q_STATE_DEF(InputChecker, button_released)
 {
     QP::QState status;
     switch (e->sig)
@@ -40,9 +41,19 @@ Q_STATE_DEF(Blinky, idle)
             status = Q_RET_HANDLED;
             break;
         }
-        case BUTTON_PRESS_SIG:
+        case TIMEOUT_BUTTON_PRESS_SIG:
         {
-            status = tran(&off);
+            if (user_input->get())
+            {
+                static QP::QEvt const my_evt{BUTTON_PRESS_SIG};
+                receiver->POST(&my_evt, this);
+
+                return tran(&button_pressed);
+            }
+            else
+            {
+                status = Q_RET_HANDLED;
+            }
             break;
         }
         default:
@@ -53,26 +64,29 @@ Q_STATE_DEF(Blinky, idle)
     }
     return status;
 }
+
 //............................................................................
-Q_STATE_DEF(Blinky, off)
+Q_STATE_DEF(InputChecker, button_pressed)
 {
     QP::QState status;
     switch (e->sig)
     {
         case Q_ENTRY_SIG:
         {
-            userIndication->reset();
             status = Q_RET_HANDLED;
             break;
         }
-        case TIMEOUT_BLINKY_SIG:
+        case TIMEOUT_BUTTON_PRESS_SIG:
         {
-            status = tran(&on);
-            break;
-        }
-        case BUTTON_PRESS_SIG:
-        {
-            status = tran(&idle);
+            if (!user_input->get())
+            {
+                return tran(&button_released);
+            }
+            else
+            {
+                status = Q_RET_HANDLED;
+            }
+            status = Q_RET_HANDLED;
             break;
         }
         default:
@@ -83,40 +97,13 @@ Q_STATE_DEF(Blinky, off)
     }
     return status;
 }
+
 //............................................................................
-Q_STATE_DEF(Blinky, on)
+void InputChecker::setUserInput(IUserInput& init_user_input)
 {
-    QP::QState status;
-    switch (e->sig)
-    {
-        case Q_ENTRY_SIG:
-        {
-            userIndication->set();
-            status = Q_RET_HANDLED;
-            break;
-        }
-        case TIMEOUT_BLINKY_SIG:
-        {
-            status = tran(&off);
-            break;
-        }
-        case BUTTON_PRESS_SIG:
-        {
-            status = tran(&idle);
-            break;
-        }
-        default:
-        {
-            status = super(&top);
-            break;
-        }
-    }
-    return status;
+    user_input = &init_user_input;
 }
-//............................................................................
-void Blinky::setUserIndication(IUserIndication& init_user_indication)
-{
-    userIndication = &init_user_indication;
-}
+
+void InputChecker::setReceiver(QP::QActive& init_ao) { receiver = &init_ao; }
 
 }  // namespace application_layer
